@@ -1,19 +1,26 @@
-
-// get input
+document.getElementById('error-msg').style.display = 'none';
+// get input value
 const search = () => {
     const inputField = document.getElementById('input-field');
     const inputText = inputField.value;
 
     if (inputField.value == '') {
-        console.log('Enter Meal Name !');
+        alert('Enter Meal Name !');
 
     } else {
 
         inputField.value = '';
         const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${inputText}`;
+
         fetch(url)
             .then(res => res.json())
-            .then(data => searchData(data.meals));
+            .then(data => searchData(data.meals))
+            .catch(error => errorMsg(error));
+
+        // const res = await fetch(url);
+        // const data = await res.json();
+        // searchData(data.meals);
+
 
 
 
@@ -21,8 +28,13 @@ const search = () => {
 
 }
 
+const errorMsg = error => {
+    document.getElementById('error-msg').style.display = 'block';
+
+}
+
 const searchData = (meals) => {
-    // if (meals.length == 0) {
+    // if (meals.indexOf(`${meal.strMeal}`)) {
     //     console.log('ok');
 
     // }
@@ -31,6 +43,7 @@ const searchData = (meals) => {
 
 
     meals.forEach(meal => {
+
         const div = document.createElement('div');
         div.classList.add('col');
         div.innerHTML = `
@@ -50,13 +63,18 @@ const searchData = (meals) => {
 
 }
 
-const mealDetails = (mealId) => {
+const mealDetails = async mealId => {
 
     const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`;
 
-    fetch(url)
-        .then(res => res.json())
-        .then(data => showDetails(data.meals[0]));
+    // fetch(url)
+    //     .then(res => res.json())
+    //     .then(data => showDetails(data.meals[0]));
+
+    const res = await fetch(url);
+    const data = await res.json();
+    showDetails(data.meals[0]);
+
 
 
 }
